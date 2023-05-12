@@ -110,10 +110,4 @@ app.get('/drinks/:token/lookup.php', (req, res) => {
   res.json(emptyDrinks);
 });
 
-// Set the port for the app to listen on
-const PORT = process.env.PORT || 4000;
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;
