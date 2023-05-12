@@ -1,4 +1,4 @@
-export const getMeals = (mealsResponse, page = 1, limit = 10) => {
+export const getMeals = (mealsResponse, page = 1, limit = 15) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const meals = mealsResponse.meals;
@@ -7,7 +7,7 @@ export const getMeals = (mealsResponse, page = 1, limit = 10) => {
   }
 }
 
-export const getDrinks = (drinksResponse, page = 1, limit = 10) => {
+export const getDrinks = (drinksResponse, page = 1, limit = 15) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const drinks = drinksResponse.drinks;
