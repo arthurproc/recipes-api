@@ -9,7 +9,8 @@ const drinkCategories = require('./mocks/drinkCategories.json');
 const drinkIngredients = require('./mocks/drinkIngredients.json');
 const mealIngredients = require('./mocks/mealIngredients.json');
 const mealCategories = require('./mocks/mealCategories.json');
-const areas = require('./mocks/areas');
+const areas = require('./mocks/areas.json');
+const { getMeals, getDrinks } = require('./helpers/pagination');
 
 // add cors headers
 app.use((req, res, next) => {
@@ -21,20 +22,20 @@ app.use((req, res, next) => {
 
 app.get('/meals/:token/list.php', (req, res) => {
   if (req.query.c) {
-    return res.json(mealCategories);
+    return res.json(getMeals(mealCategories));
   } else if (req.query.i) {
-    return res.json(mealIngredients);
+    return res.json(getMeals(mealIngredients));
   } else if (req.query.a) {
-    return res.json(areas);
+    return res.json(getMeals(areas));
   }
   res.json();
 });
 
 app.get('/drinks/:token/list.php', (req, res) => {
   if (req.query.c) {
-    return res.json(drinkCategories);
+    return res.json(getDrinks(drinkCategories));
   } else if (req.query.i) {
-    return res.json(drinkIngredients);
+    return res.json(getDrinks(drinkIngredients));
   }
   res.json();
 });
@@ -44,7 +45,7 @@ app.get('/meals/:token/filter.php', (req, res) => {
   const mealsFound = applyFilter(queryParameter, req.query[queryParameter]);
 
   if (mealsFound.length > 0) {
-    return res.json({ meals: mealsFound });
+    return res.json(getMeals({ meals: mealsFound }));
   }
   res.json(emptyMeals);
 });
@@ -54,7 +55,7 @@ app.get('/drinks/:token/filter.php', (req, res) => {
   const drinksFound = applyFilter(queryParameter, req.query[queryParameter], 'drinks');
 
   if (drinksFound.length > 0) {
-    return res.json({ drinks: drinksFound });
+    return res.json(getDrinks({ drinks: drinksFound }));
   }
   res.json(emptyDrinks);
 });
@@ -62,7 +63,7 @@ app.get('/drinks/:token/filter.php', (req, res) => {
 app.get('/meals/:token/search.php', (req, res) => {
   const mealsFound = meals.meals.filter((meal) => meal.strMeal.toLowerCase().includes(req.query.s.toLowerCase()));
   if (mealsFound.length > 0) {
-    return res.json({ meals: mealsFound });
+    return res.json(getMeals({ meals: mealsFound }));
   }
   res.json(emptyMeals);
 });
@@ -70,7 +71,7 @@ app.get('/meals/:token/search.php', (req, res) => {
 app.get('/drinks/:token/search.php', (req, res) => {
   const drinksFound = drinks.drinks.filter((drink) => drink.strDrink.toLowerCase().includes(req.query.s.toLowerCase()));
   if (drinksFound.length > 0) {
-    return res.json({ drinks: drinksFound });
+    return res.json(getDrinks({ drinks: drinksFound }));
   }
   res.json(emptyDrinks);
 });
@@ -78,13 +79,13 @@ app.get('/drinks/:token/search.php', (req, res) => {
 app.get('/meals/:token/random.php', (req, res) => {
   const randomIndex = Math.floor(Math.random() * meals.meals.length);
 
-  res.json({ meals: [meals.meals[randomIndex]] });
+  res.json(getMeals({ meals: [meals.meals[randomIndex]] }));
 });
 
 app.get('/drinks/:token/random.php', (req, res) => {
   const randomIndex = Math.floor(Math.random() * drinks.drinks.length);
 
-  res.json({ drinks: [drinks.drinks[randomIndex]] });
+  res.json(getDrinks({ drinks: [drinks.drinks[randomIndex]] }));
 });
 
 app.get('/meals/:token/lookup.php', (req, res) => {
